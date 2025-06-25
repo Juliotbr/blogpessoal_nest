@@ -1,10 +1,20 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Param, ParseIntPipe, Post, Put } from "@nestjs/common";
-import { Postagem } from "../entities/postagem.entity";
-import { PostagemService } from "../services/postagem.service";
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Param,
+  ParseIntPipe,
+  Post,
+  Put,
+} from '@nestjs/common';
+import { Postagem } from '../entities/postagem.entity';
+import { PostagemService } from '../services/postagem.service';
 
-@Controller("/postagens")
+@Controller('/postagens')
 export class PostagemController {
-  constructor(private readonly postagemService: PostagemService) { }
+  constructor(private readonly postagemService: PostagemService) {}
 
   @Get()
   @HttpCode(HttpStatus.OK)
@@ -17,7 +27,7 @@ export class PostagemController {
   findById(@Param('id', ParseIntPipe) id: number): Promise<Postagem> {
     return this.postagemService.findById(id);
   }
-  
+
   @Get('/titulo/:titulo')
   @HttpCode(HttpStatus.OK)
   findByTitulo(@Param('titulo') titulo: string): Promise<Postagem[]> {
@@ -35,5 +45,4 @@ export class PostagemController {
   update(@Body() postagem: Postagem): Promise<Postagem> {
     return this.postagemService.update(postagem);
   }
-
 }
