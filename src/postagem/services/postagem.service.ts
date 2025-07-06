@@ -16,18 +16,19 @@ export class PostagemService {
     return await this.postagemRepository.find({
       relations: {
         tema: true,
+        usuario: true,
       },
     });
   }
 
   async findById(id: number): Promise<Postagem> {
-    // eslint-disable-next-line prefer-const
-    let postagem = await this.postagemRepository.findOne({
+    const postagem = await this.postagemRepository.findOne({
       where: {
         id,
       },
       relations: {
         tema: true,
+        usuario: true,
       },
     });
 
@@ -44,23 +45,28 @@ export class PostagemService {
       },
       relations: {
         tema: true,
+        usuario: true,
       },
     });
   }
 
   async create(postagem: Postagem): Promise<Postagem> {
     await this.temaService.findById(postagem.tema.id);
+
     return await this.postagemRepository.save(postagem);
   }
 
   async update(postagem: Postagem): Promise<Postagem> {
     await this.findById(postagem.id);
+
     await this.temaService.findById(postagem.tema.id);
+
     return await this.postagemRepository.save(postagem);
   }
 
   async delete(id: number): Promise<DeleteResult> {
     await this.findById(id);
+
     return await this.postagemRepository.delete(id);
   }
 }
