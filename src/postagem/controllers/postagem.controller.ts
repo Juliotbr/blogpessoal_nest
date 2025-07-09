@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpCode,
   HttpStatus,
@@ -10,12 +11,15 @@ import {
   Put,
   UseGuards,
 } from '@nestjs/common';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { JwtAuthGuard } from '../../auth/guard/jwt-auth.guard';
 import { Postagem } from '../entities/postagem.entity';
 import { PostagemService } from '../services/postagem.service';
-import { JwtAuthGuard } from '../../auth/guard/jwt-auth.guard';
 
+@ApiTags('Postagem')
 @UseGuards(JwtAuthGuard)
 @Controller('/postagens')
+@ApiBearerAuth()
 export class PostagemController {
   constructor(private readonly postagemService: PostagemService) {}
 
@@ -34,7 +38,6 @@ export class PostagemController {
   @Get('/titulo/:titulo')
   @HttpCode(HttpStatus.OK)
   findByTitulo(@Param('titulo') titulo: string): Promise<Postagem[]> {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call
     return this.postagemService.findByTitulo(titulo);
   }
 
@@ -48,5 +51,11 @@ export class PostagemController {
   @HttpCode(HttpStatus.OK)
   update(@Body() postagem: Postagem): Promise<Postagem> {
     return this.postagemService.update(postagem);
+  }
+
+  @Delete('/:id')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  delete(@Param('id', ParseIntPipe) id: number) {
+    return this.postagemService.delete(id);
   }
 }
